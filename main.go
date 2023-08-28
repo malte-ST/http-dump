@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/http/httputil"
 	"os"
+	"strings"
 )
 
 var port = "8080"
@@ -20,9 +21,13 @@ func main() {
 			return
 		}
 
-		b := string(d)
+		lg := fmt.Sprintf("%q", d)
+		lg = strings.TrimPrefix(lg, "\"")
+		lg = strings.TrimSuffix(lg, "\"")
+		fmt.Println(lg)
 
-		log.Printf("request received:\n%s\n\n", b)
+		w.Header().Set("Content-Type", "text/html")
+		w.WriteHeader(http.StatusOK)
 
 		if _, err := fmt.Fprintf(w, ""); err != nil {
 			msg := fmt.Sprintf("couldn't write response: %s", err)
